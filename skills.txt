@@ -1,5 +1,6 @@
 data_explorer.py
 dimension_breakout.py
+forecast_analysis.py
 market_share_analysis.py
 metric_drivers.py
 trend.py
