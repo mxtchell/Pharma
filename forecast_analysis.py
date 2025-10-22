@@ -258,8 +258,8 @@ def run_forecast_analysis(parameters: SkillInput) -> SkillOutput:
                 'forecast_steps': forecast_steps,
                 'model_name': best_model.replace('_', ' ').title(),
                 'is_price_metric': False,
-                'total_forecasted': f"${forecast_stats_dict['total']:,.0f}",
-                'average_per_period': f"${forecast_stats_dict['average']:,.0f}",
+                'total_forecasted': f"{forecast_stats_dict['total']:,.0f}",
+                'average_per_period': f"{forecast_stats_dict['average']:,.0f}",
                 'growth_pct': f"{forecast_stats_dict['growth']:.1f}%",
                 'trend_direction': patterns['trend_direction'],
                 'trend_r2': f"{patterns['trend_r2']:.3f}",
@@ -801,23 +801,10 @@ def create_visualizations(output_df, metric, best_model, patterns, model_results
     all_values = list(historical['actual']) + list(forecast['forecast'])
     max_value = max(all_values)
 
-    # Use decimals for small numbers (< 100), no decimals for large numbers
-    if max_value < 10:
-        y_format = "${value:,.2f}"  # 2 decimals for very small numbers (e.g., $1.23)
-        tooltip_format = "${point.y:,.2f}"
-        ci_format = "${point.low:,.2f} - ${point.high:,.2f}"
-    elif max_value < 100:
-        y_format = "${value:,.2f}"  # 2 decimals for small numbers (e.g., $12.34)
-        tooltip_format = "${point.y:,.2f}"
-        ci_format = "${point.low:,.2f} - ${point.high:,.2f}"
-    elif max_value < 1000:
-        y_format = "${value:,.1f}"  # 1 decimal for medium numbers (e.g., $123.4)
-        tooltip_format = "${point.y:,.1f}"
-        ci_format = "${point.low:,.1f} - ${point.high:,.1f}"
-    else:
-        y_format = "${value:,.0f}"  # No decimals for large numbers (e.g., $1,234)
-        tooltip_format = "${point.y:,.0f}"
-        ci_format = "${point.low:,.0f} - ${point.high:,.0f}"
+    # All pharma metrics are integers (no currency), format accordingly
+    y_format = "{value:,.0f}"  # Integer format (e.g., 1,234)
+    tooltip_format = "{point.y:,.0f}"
+    ci_format = "{point.low:,.0f} - {point.high:,.0f}"
 
     # Build filter display for chart subtitle
     filter_text = ""
@@ -899,7 +886,7 @@ def create_visualizations(output_df, metric, best_model, patterns, model_results
                 "labels": {"rotation": -45, "style": {"fontSize": "11px"}}
             },
             "yAxis": {
-                "title": {"text": f"{metric.title()} ($)", "style": {"fontWeight": "bold"}},
+                "title": {"text": f"{metric.title()}", "style": {"fontWeight": "bold"}},
                 "labels": {"format": y_format},
                 "gridLineColor": "#E0E0E0"
             },
